@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
 
-  auto dummy_tf2 = std::make_shared<dummy_tf2::DummyTF2>("social_nav_dummy_tf2_node");
+  auto dummy_tf2 = std::make_shared<dummy_tf2::DummyTF2>("dummy_tf2_node");
   rclcpp::Rate loop_rate(200ms); 
   while (rclcpp::ok())
   {

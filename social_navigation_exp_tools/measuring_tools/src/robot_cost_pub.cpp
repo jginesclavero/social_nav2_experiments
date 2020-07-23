@@ -96,7 +96,7 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   auto robot_cost_node = 
-    std::make_shared<RobotCost>("social_nav_exp_robot_cost_node");
+    std::make_shared<RobotCost>("robot_cost_node");
   robot_cost_node->init();
   rclcpp::WallRate loop_rate(1000ms);
   while (rclcpp::ok()) 

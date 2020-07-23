@@ -87,7 +87,7 @@ int main(int argc, char * argv[])
   std::string agent;
   agent = argv[1];
   auto distance_node = 
-    std::make_shared<DistanceNode>("social_nav_exp_distance_node", agent);
+    std::make_shared<DistanceNode>("distance_to_agent_node", agent);
   rclcpp::WallRate loop_rate(1000ms);
 
   while (rclcpp::ok()) 

@@ -132,7 +132,7 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   auto robot_path_node = 
-    std::make_shared<PathPub>("social_nav_exp_robot_path_node");
+    std::make_shared<PathPub>("path_pub_node");
   rclcpp::spin(robot_path_node);
   rclcpp::shutdown();
   return 0;
