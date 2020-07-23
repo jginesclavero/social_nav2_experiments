@@ -47,9 +47,9 @@ public:
       "amcl_pose",
       rclcpp::QoS(rclcpp::KeepLast(1)).transient_local().reliable(),
       std::bind(&PathPub::amclCb, this, std::placeholders::_1));
-    robot_path_pub_ = create_publisher<nav_msgs::msg::Path>("social_nav_exp/robot_path", 1);
-    agent_path_pub_ = create_publisher<nav_msgs::msg::Path>("social_nav_exp/agent_path", 1);
-    path_increment_pub_ = create_publisher<std_msgs::msg::Float32>("social_nav_exp/path_increment", 1);
+    robot_path_pub_ = create_publisher<nav_msgs::msg::Path>("measuring_tools/robot_path", 1);
+    agent_path_pub_ = create_publisher<nav_msgs::msg::Path>("measuring_tools/agent_path", 1);
+    path_increment_pub_ = create_publisher<std_msgs::msg::Float32>("measuring_tools/path_increment", 1);
     frame_id_ = "map";
 
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(get_clock());

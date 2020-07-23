@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(social_navigation_exp_data)
+project(measuring_tools)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE DEBUG)
@@ -28,23 +28,23 @@ set(dependencies
 
 include_directories(include)
 
-add_executable(social_nav_dummy_tf2_node src/social_nav_dummy_tf2_node.cpp)
-ament_target_dependencies(social_nav_dummy_tf2_node ${dependencies})
+add_executable(dummy_tf2_node src/dummy_tf2_node.cpp)
+ament_target_dependencies(dummy_tf2_node ${dependencies})
 
-add_executable(social_nav_exp_distance_node src/distance_to_agent.cpp)
-ament_target_dependencies(social_nav_exp_distance_node ${dependencies})
+add_executable(distance_to_agent_node src/distance_to_agent.cpp)
+ament_target_dependencies(distance_to_agent_node ${dependencies})
 
-add_executable(social_nav_exp_robot_cost_node src/robot_cost_pub.cpp)
-ament_target_dependencies(social_nav_exp_robot_cost_node ${dependencies})
+add_executable(robot_cost_node src/robot_cost_pub.cpp)
+ament_target_dependencies(robot_cost_node ${dependencies})
 
-add_executable(social_nav_exp_path_pub_node src/path_pub.cpp)
-ament_target_dependencies(social_nav_exp_path_pub_node ${dependencies})
+add_executable(path_pub_node src/path_pub.cpp)
+ament_target_dependencies(path_pub_node ${dependencies})
 
 install(TARGETS
-  social_nav_dummy_tf2_node
-  social_nav_exp_distance_node
-  social_nav_exp_robot_cost_node
-  social_nav_exp_path_pub_node
+  dummy_tf2_node
+  distance_to_agent_node
+  robot_cost_node
+  path_pub_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
