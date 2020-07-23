@@ -38,28 +38,28 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')))
 
     dummytf2_cmd = Node(
-        package='social_navigation_exp_data',
-        node_executable='social_nav_dummy_tf2_node',
-        node_name='social_nav_dummy_tf2_node',
+        package='measuring_tools',
+        node_executable='dummy_tf2_node',
+        node_name='dummy_tf2_node',
         output='screen')
 
     distance_to_agent_cmd = Node(
-        package='social_navigation_exp_data',
-        node_executable='social_nav_exp_distance_node',
-        node_name='social_nav_exp_distance_node',
+        package='measuring_tools',
+        node_executable='distance_to_agent_node',
+        node_name='distance_to_agent_node',
         output='screen',
         arguments=["agent_3"])
 
     robot_cost_cmd = Node(
-        package='social_navigation_exp_data',
-        node_executable='social_nav_exp_robot_cost_node',
-        node_name='social_nav_exp_robot_cost_node',
+        package='measuring_tools',
+        node_executable='robot_cost_node',
+        node_name='robot_cost_node',
         output='screen')
     
     robot_path_cmd = Node(
-        package='social_navigation_exp_data',
-        node_executable='social_nav_exp_path_pub_node',
-        node_name='social_nav_exp_path_pub_node',
+        package='measuring_tools',
+        node_executable='path_pub_node',
+        node_name='path_pub_node',
         output='screen')
     
     topics_2_csv_cmd = Node(
@@ -79,9 +79,9 @@ def generate_launch_description():
 
     ld.add_action(social_nav_bringup_cmd)
     ld.add_action(dummytf2_cmd)
-    #ld.add_action(robot_cost_cmd)
-    #ld.add_action(distance_to_agent_cmd)
-    #ld.add_action(robot_path_cmd)
-    #ld.add_action(topics_2_csv_cmd)
+    ld.add_action(robot_cost_cmd)
+    ld.add_action(distance_to_agent_cmd)
+    ld.add_action(robot_path_cmd)
+    # ld.add_action(topics_2_csv_cmd)
     ld.add_action(agent_spawner_cmd)
     return ld
