@@ -27,6 +27,8 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    # ros2 run --prefix 'gdb -ex run --args' nav2_planner planner_server --ros-args -r __node:=planner_server --params-file /home/ubuntu/social_nav2_ws/src/social_navigation2/social_navigation_bringup/params/nav2_params.yaml
+
     # Get the launch directory
     social_bringup_dir = get_package_share_directory('social_navigation_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
@@ -75,19 +77,14 @@ def generate_launch_description():
         node_name='exp2_topics_2_csv',
         output='screen')
     
-    pedsim_cmd = Node(
-        package='pedsim_gazebo_plugin',
-        node_executable='spawn_single_agent.py',
-        node_name='spawn_single_agent',
-        output='screen')
-
     # Create the launch description and populate
     ld = LaunchDescription()
 
-    ld.add_action(distance_to_agent_cmd)
-    ld.add_action(path_cmd)
-    # ld.add_action(topics_2_csv_cmd)
+    #ld.add_action(distance_to_agent_cmd)
+    #ld.add_action(path_cmd)
+    #ld.add_action(topics_2_csv_cmd)    
     ld.add_action(escort_controller_cmd)
-    ld.add_action(robot_cost_cmd)
-    ld.add_action(social_nav_bringup_cmd)
+    ld.add_action(pedsim_cmd)
+    #ld.add_action(robot_cost_cmd)
+    #ld.add_action(social_nav_bringup_cmd)
     return ld
