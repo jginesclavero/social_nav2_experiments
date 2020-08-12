@@ -37,6 +37,12 @@ def generate_launch_description():
     social_nav_bringup_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')))
 
+    approach_controller_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(
+            get_package_share_directory('social_navigation_actions'),
+            'launch',
+            'approach_controller.py'))
+        )
     dummytf2_cmd = Node(
         package='measuring_tools',
         node_executable='dummy_tf2_node',
@@ -77,11 +83,12 @@ def generate_launch_description():
     # Create the launch description and populate
     ld = LaunchDescription()
 
-    ld.add_action(social_nav_bringup_cmd)
+    # ld.add_action(social_nav_bringup_cmd)
     ld.add_action(dummytf2_cmd)
-    ld.add_action(robot_cost_cmd)
-    ld.add_action(distance_to_agent_cmd)
-    ld.add_action(robot_path_cmd)
+    # ld.add_action(robot_cost_cmd)
+    # ld.add_action(distance_to_agent_cmd)
+    # ld.add_action(robot_path_cmd)
     # ld.add_action(topics_2_csv_cmd)
     ld.add_action(agent_spawner_cmd)
+    ld.add_action(approach_controller_cmd)
     return ld
