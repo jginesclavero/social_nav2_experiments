@@ -60,7 +60,9 @@ def generate_launch_description():
 
     social_nav_bringup_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')),
-        launch_arguments={'params_file': params_file}.items())
+        launch_arguments={
+            'headless': 'True',
+            'params_file': params_file}.items())
 
     escort_controller_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(

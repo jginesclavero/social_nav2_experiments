@@ -40,7 +40,7 @@ def generate_launch_description():
 
     # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
-    declare_frame_id_cmd = LaunchConfiguration('frame_id')
+    frame_id = LaunchConfiguration('frame_id')
     declare_scene_file_cmd = DeclareLaunchArgument(
         'scene_file', 
         default_value=os.path.join(exp_bringup_dir, 'scenarios', 'escorting.xml'),
@@ -53,7 +53,9 @@ def generate_launch_description():
         'frame_id', default_value='map', description='Reference frame')
 
     social_nav_bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')))
+        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')),
+        launch_arguments={
+            'headless': 'True'}.items())
 
     escort_controller_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
