@@ -34,6 +34,7 @@ DummyTF2::DummyTF2(const std::string & name) : Node(name)
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
   update_agent_pub_ = create_publisher<pedsim_msgs::msg::AgentStates>(
     "pedsim_simulator/simulated_agents", rclcpp::SensorDataQoS());
+  rotation = geometry_msgs::msg::Twist();
 }
 
 void DummyTF2::approachTFCallback(const std_msgs::msg::Empty::SharedPtr msg)
@@ -63,16 +64,14 @@ void DummyTF2::step()
   tf2::Quaternion qt;
   if (update_tf)
   {
-    srand (time(NULL));
+    //srand (time(NULL));
     rand_angle = 2 * M_PI * rand() / (RAND_MAX);
-    auto rotation = geometry_msgs::msg::Twist();
-    rotation.angular.x = 0.0;
-    rotation.angular.y = 0.0;
-    rotation.angular.z = rand_angle;
-    updateGazeboAgent(rotation);
+    rotation.linear.x = cos(rand_angle);
+    rotation.linear.y = sin(rand_angle);
     update_tf = false;
   }
-
+  
+  updateGazeboAgent(rotation);
   TransformStamped tf_msg;
   tf_msg.transform.translation.x = 2.5;
   tf_msg.transform.translation.y = -3.0;

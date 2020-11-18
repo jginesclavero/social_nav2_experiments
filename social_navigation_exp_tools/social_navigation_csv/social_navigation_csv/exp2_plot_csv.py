@@ -53,6 +53,7 @@ plt.yticks(np.arange(min(mean_distance_proposal.values),
 #plt.title('Distance to human during the Escort task.')
 plt.savefig("/home/jgines/waf2020_data/figures/distance.pdf")
 plt.clf()
+print("Experiments: "    + str(len(df_['distance'])))
 
 
 #plt.plot(mean_cost.values)

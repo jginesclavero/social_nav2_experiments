@@ -31,16 +31,16 @@ def generate_launch_description():
 
     # Get the launch directory
     exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
-
-    scene_file = LaunchConfiguration('scene_file')
-    simulation_factor = LaunchConfiguration('simulation_factor')
-
     social_bringup_dir = get_package_share_directory('social_navigation_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
-    declare_frame_id_cmd = LaunchConfiguration('frame_id')
+    frame_id = LaunchConfiguration('frame_id')
+    params_file = LaunchConfiguration('params_file')
+    scene_file = LaunchConfiguration('scene_file')
+    simulation_factor = LaunchConfiguration('simulation_factor')
+
     declare_scene_file_cmd = DeclareLaunchArgument(
         'scene_file', 
         default_value=os.path.join(exp_bringup_dir, 'scenarios', 'escorting.xml'),
@@ -49,11 +49,18 @@ def generate_launch_description():
     declare_simulation_factor_cmd = DeclareLaunchArgument(
         'simulation_factor', default_value='0.05',
         description='Simulator factor. 0.0 to get static agents')
+
+    declare_params_file_cmd = DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(social_bringup_dir, 'params', 'nav2_params_lu_proxemics.yaml'),
+        description='Full path to the ROS2 parameters file to use for all launched nodes')
+
     declare_frame_id_cmd = DeclareLaunchArgument(
         'frame_id', default_value='map', description='Reference frame')
 
     social_nav_bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')))
+        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')),
+        launch_arguments={'params_file': params_file}.items())
 
     escort_controller_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
@@ -106,6 +113,7 @@ def generate_launch_description():
     ld.add_action(declare_scene_file_cmd)
     ld.add_action(declare_simulation_factor_cmd)
     ld.add_action(declare_frame_id_cmd)
+    ld.add_action(declare_params_file_cmd)
 
     ld.add_action(distance_to_agent_cmd)
     ld.add_action(path_cmd)

@@ -49,6 +49,7 @@ private:
   rclcpp::Publisher<pedsim_msgs::msg::AgentStates>::SharedPtr update_agent_pub_;
   bool update_tf;
   float rand_angle;
+  geometry_msgs::msg::Twist rotation;
 };
 };  // namespace pedsim
 

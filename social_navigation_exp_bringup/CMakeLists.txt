@@ -8,6 +8,7 @@ find_package(navigation2 REQUIRED)
 nav2_package()
 
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY scenarios DESTINATION share/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
