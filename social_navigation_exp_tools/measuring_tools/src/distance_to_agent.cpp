@@ -68,7 +68,7 @@ public:
     
     std_msgs::msg::Float32 distance;
     distance.data = bf2agent.getOrigin().length();
-    // RCLCPP_INFO(get_logger(), "%f", distance.data);
+    RCLCPP_DEBUG(get_logger(), "Distance to agent [%f]", distance.data);
     pub_->publish(distance);
   }
 
@@ -88,7 +88,7 @@ int main(int argc, char * argv[])
   agent = argv[1];
   auto distance_node = 
     std::make_shared<DistanceNode>("distance_to_agent_node", agent);
-  rclcpp::WallRate loop_rate(1000ms);
+  rclcpp::WallRate loop_rate(500ms);
 
   while (rclcpp::ok()) 
   {

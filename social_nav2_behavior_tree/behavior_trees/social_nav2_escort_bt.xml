@@ -1,0 +1,16 @@
+<root main_tree_to_execute = "MainTree" >
+    <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <Repeat num_cycles="100">
+                <Parallel success_threshold="1" failure_threshold="1">
+                    <Dialog name="dialog"/>
+                    <SocialNav2Action 
+                            name="social_nav2_action" 
+                            goal="escort" 
+                            agent_id="agent_1"/>
+                    <!--<StopCondition stop_topic="/social_nav2_bt_action/stop"/>-->
+                </Parallel>
+            </Repeat>
+        </Sequence>
+     </BehaviorTree>
+</root>

@@ -36,11 +36,20 @@ def generate_launch_description():
     scene_file = LaunchConfiguration('scene_file')
     simulation_factor = LaunchConfiguration('simulation_factor')
     frame_id = LaunchConfiguration('frame_id')
-    
+    default_bt_xml_filename = LaunchConfiguration('default_bt_xml_filename')
+
     # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
     frame_id_cmd = DeclareLaunchArgument(
         'frame_id', default_value='map', description='Reference frame')
+
+    declare_bt_xml_cmd = DeclareLaunchArgument(
+        'default_bt_xml_filename',
+        default_value=os.path.join(
+            get_package_share_directory('social_navigation_bringup'),
+            'behavior_trees', 'navigate_w_replanning_and_recovery.xml'),
+        description='Full path to the behavior tree xml file to use')
+
     social_nav_bringup_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')))
 
@@ -49,56 +58,67 @@ def generate_launch_description():
             get_package_share_directory('social_navigation_actions'),
             'launch',
             'approach_controller.py'))
-        )
-        
-    dummytf2_cmd = Node(
-        package='measuring_tools',
-        node_executable='dummy_tf2_node',
-        node_name='dummy_tf2_node',
-        output='screen')
+    )
+    social_nav_actions_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(
+            get_package_share_directory('social_navigation_actions'),
+            'launch',
+            'social_nav_actions.py'))
+    )
 
     distance_to_agent_cmd = Node(
         package='measuring_tools',
-        node_executable='distance_to_agent_node',
-        node_name='distance_to_agent_node',
+        executable='distance_to_agent_node',
+        name='distance_to_agent_node',
         output='screen',
         arguments=["agent_3"])
 
     robot_cost_cmd = Node(
         package='measuring_tools',
-        node_executable='robot_cost_node',
-        node_name='robot_cost_node',
+        executable='robot_cost_node',
+        name='robot_cost_node',
+        output='screen')
+    path_cmd = Node(
+        package='measuring_tools',
+        executable='path_pub_node',
+        name='path_pub_node',
         output='screen')
     
     topics_2_csv_cmd = Node(
         package='social_navigation_csv',
-        node_executable='topics_2_csv',
-        node_name='topics_2_csv',
+        executable='topics_2_csv',
+        name='topics_2_csv',
         output='screen')
     
     agent_spawner_cmd = Node(
         package='pedsim_gazebo_plugin',
-        node_executable='spawn_single_agent.py',
-        node_name='spawn_single_agent',
+        executable='spawn_single_agent.py',
+        name='spawn_single_agent',
         output='screen')
-    
-    pedsim_visualizer_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('pedsim_visualizer'), 'launch', 'visualizer_launch.py')),
-        launch_arguments={'frame_id': frame_id}.items()
-    )  
+
+    social_nav_bringup_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'social_nav_launch.py')),
+            launch_arguments={'default_bt_xml_filename': default_bt_xml_filename}.items())
+
+    approach_sim = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(os.path.join(
+            exp_bringup_dir, 
+            'launch',
+            'approach_sim_launch.py')))
    
     # Create the launch description and populate
     ld = LaunchDescription()
     ld.add_action(frame_id_cmd)
+    ld.add_action(declare_bt_xml_cmd)
 
-    ld.add_action(social_nav_bringup_cmd)
-    ld.add_action(dummytf2_cmd)
     ld.add_action(robot_cost_cmd)
-    ld.add_action(distance_to_agent_cmd)
-    # ld.add_action(topics_2_csv_cmd)
-    ld.add_action(pedsim_visualizer_cmd)
+    ld.add_action(distance_to_agent_cmd)    
+    ld.add_action(path_cmd)
+    ld.add_action(topics_2_csv_cmd)
 
     ld.add_action(agent_spawner_cmd)
-    ld.add_action(approach_controller_cmd)
+    #ld.add_action(approach_controller_cmd)
+    ld.add_action(social_nav_actions_cmd)
+    ld.add_action(approach_sim)
+    ld.add_action(social_nav_bringup_cmd)
     return ld

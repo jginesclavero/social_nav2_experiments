@@ -1,0 +1,21 @@
+<root main_tree_to_execute = "MainTree" >
+    <BehaviorTree ID="MainTree">
+        <Sequence name="root_sequence">
+            <Repeat num_cycles="100">
+                <Sequence name="social_interaction">
+                    <Chrono/>
+                    <ReactiveFallback name="SocialActionFallback">
+                        <isGoalReached/>
+                        <SocialNav2Action 
+                            name="social_nav2_action" 
+                            goal="hri" 
+                            agent_id="agent_3"/>
+                    </ReactiveFallback>
+                    <NavigateToWp  name="navigate_to_wp" goal="home"/>
+                    <TurnAgent/>
+                    <WriteCSV/>
+                </Sequence>
+            </Repeat>
+        </Sequence>
+     </BehaviorTree>
+</root>

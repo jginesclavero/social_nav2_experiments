@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
 
 delta = 0.025
-x = np.arange(-6.0, 6.0 , delta)
-y = np.arange(-6.0, 6.0, delta)
-var_h = 2.5
-var_s = 2.5
-var_r = 2.5
+x = np.arange(-4.0, 4.0 , delta)
+y = np.arange(-4.0, 4.0, delta)
+var_h = 2.0
+var_s = 0.7
+var_r = 0.7
 orientation = 0.0
 
 X, Y = np.meshgrid(x, y)
@@ -55,7 +55,7 @@ def asymmetric_gaussian(x, y, angle, var_h, var_s, var_r):
 
 
 fig, ax = plt.subplots(figsize=(8, 8))
-CS = ax.contour(X, Y, asymmetric_gaussian(X, Y, orientation, var_h, var_s, var_r), cmap='viridis_r')
+CS = ax.contour(X, Y, asymmetric_gaussian(X, Y, orientation, var_h, var_s, var_r), cmap='gnuplot')
 ax.clabel(CS, inline=1, fontsize=10)
 plt.xlabel('Y (meters)')
 plt.ylabel('X (meters)')

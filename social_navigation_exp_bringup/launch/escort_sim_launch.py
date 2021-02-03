@@ -47,22 +47,16 @@ def generate_launch_description():
         description='')
 
     declare_simulation_factor_cmd = DeclareLaunchArgument(
-        'simulation_factor', default_value='0.05',
+        'simulation_factor', default_value='0.1',
         description='Simulator factor. 0.0 to get static agents')
     declare_frame_id_cmd = DeclareLaunchArgument(
         'frame_id', default_value='map', description='Reference frame')
 
-    social_nav_bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')),
-        launch_arguments={
-            'headless': 'True'}.items())
-
-    escort_controller_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('social_navigation_actions'),
-            'launch',
-            'escort_controller.py'))
-        )
+    sim_cmd = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(exp_bringup_dir, 'launch', 'sim_launch.py')),
+        launch_arguments={'headless': "True"}.items()
+    )
 
     pedsim_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
@@ -77,31 +71,6 @@ def generate_launch_description():
             os.path.join(get_package_share_directory('pedsim_visualizer'), 'launch', 'visualizer_launch.py')),
         launch_arguments={'frame_id': frame_id}.items()
     )
-
-    distance_to_agent_cmd = Node(
-        package='measuring_tools',
-        node_executable='distance_to_agent_node',
-        node_name='distance_to_agent_node',
-        output='screen',
-        arguments=["agent_1"])
-
-    robot_cost_cmd = Node(
-        package='measuring_tools',
-        node_executable='robot_cost_node',
-        node_name='robot_cost_node',
-        output='screen')
-    
-    path_cmd = Node(
-        package='measuring_tools',
-        node_executable='path_pub_node',
-        node_name='path_pub_node',
-        output='screen')
-    
-    topics_2_csv_cmd = Node(
-        package='social_navigation_csv',
-        node_executable='exp2_topics_2_csv',
-        node_name='exp2_topics_2_csv',
-        output='screen')
     
     # Create the launch description and populate
     ld = LaunchDescription()
@@ -109,12 +78,8 @@ def generate_launch_description():
     ld.add_action(declare_simulation_factor_cmd)
     ld.add_action(declare_frame_id_cmd)
 
-    ld.add_action(distance_to_agent_cmd)
-    ld.add_action(path_cmd)
-    #ld.add_action(topics_2_csv_cmd)    
-    ld.add_action(escort_controller_cmd)
     ld.add_action(pedsim_cmd)
     ld.add_action(pedsim_visualizer_cmd)
-    ld.add_action(robot_cost_cmd)
-    ld.add_action(social_nav_bringup_cmd)
+    ld.add_action(sim_cmd)
+
     return ld

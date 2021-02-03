@@ -31,59 +31,56 @@ def generate_launch_description():
 
     # Get the launch directory
     exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
+
+    scene_file = LaunchConfiguration('scene_file')
+    simulation_factor = LaunchConfiguration('simulation_factor')
+
     social_bringup_dir = get_package_share_directory('social_navigation_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Create the launch configuration variables
     namespace = LaunchConfiguration('namespace')
     frame_id = LaunchConfiguration('frame_id')
-    params_file = LaunchConfiguration('params_file')
-    scene_file = LaunchConfiguration('scene_file')
-    simulation_factor = LaunchConfiguration('simulation_factor')
-
     declare_scene_file_cmd = DeclareLaunchArgument(
         'scene_file', 
         default_value=os.path.join(exp_bringup_dir, 'scenarios', 'escorting.xml'),
         description='')
-
     declare_simulation_factor_cmd = DeclareLaunchArgument(
-        'simulation_factor', default_value='0.05',
+        'simulation_factor', default_value='0.15',
         description='Simulator factor. 0.0 to get static agents')
-
-    declare_params_file_cmd = DeclareLaunchArgument(
-        'params_file',
-        default_value=os.path.join(social_bringup_dir, 'params', 'nav2_params_lu_proxemics.yaml'),
-        description='Full path to the ROS2 parameters file to use for all launched nodes')
-
     declare_frame_id_cmd = DeclareLaunchArgument(
         'frame_id', default_value='map', description='Reference frame')
 
     social_nav_bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'tb3_house_simulation_launch.py')),
-        launch_arguments={
-            'headless': 'True',
-            'params_file': params_file}.items())
+        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'social_nav_launch.py')))
 
-    escort_controller_cmd = IncludeLaunchDescription(
+    #escort_controller_cmd = IncludeLaunchDescription(
+    #    PythonLaunchDescriptionSource(os.path.join(
+    #        get_package_share_directory('social_navigation_actions'),
+    #        'launch',
+    #        'escort_controller.py'))
+    #    )
+    
+    social_goal_updater_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
             get_package_share_directory('social_navigation_actions'),
             'launch',
-            'escort_controller.py'))
+            'social_goal_updaters_launch.py'))
         )
 
-    pedsim_cmd = IncludeLaunchDescription(
+    escort_controller_cmd  = Node(
+        package='social_nav2_experiments',
+        executable='social_nav2_hri',
+        name='social_nav2_hri',
+        output='screen')
+        
+    escort_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('pedsim_simulator'), 
+            exp_bringup_dir, 
             'launch',
-            'simulator_launch.py')),
+            'escort_sim_launch.py')),
         launch_arguments={'scene_file': scene_file,
                           'simulation_factor': simulation_factor}.items())
-
-    pedsim_visualizer_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('pedsim_visualizer'), 'launch', 'visualizer_launch.py')),
-        launch_arguments={'frame_id': frame_id}.items()
-    )
 
     distance_to_agent_cmd = Node(
         package='measuring_tools',
@@ -115,14 +112,13 @@ def generate_launch_description():
     ld.add_action(declare_scene_file_cmd)
     ld.add_action(declare_simulation_factor_cmd)
     ld.add_action(declare_frame_id_cmd)
-    ld.add_action(declare_params_file_cmd)
 
     ld.add_action(distance_to_agent_cmd)
     ld.add_action(path_cmd)
     #ld.add_action(topics_2_csv_cmd)    
-    ld.add_action(escort_controller_cmd)
-    ld.add_action(pedsim_cmd)
-    ld.add_action(pedsim_visualizer_cmd)
-    ld.add_action(robot_cost_cmd)
+    #ld.add_action(escort_controller_cmd)
+    ld.add_action(social_goal_updater_cmd)
+
+    ld.add_action(escort_sim)
     ld.add_action(social_nav_bringup_cmd)
     return ld

@@ -20,7 +20,7 @@ from rclpy.node import Node
 from rclpy.executors import MultiThreadedExecutor
 from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.action import ActionServer, CancelResponse, GoalResponse
-from std_msgs.msg import Float32, Int16, Empty
+from std_msgs.msg import Float32, Float64, Int16, Empty
 from geometry_msgs.msg import Twist
 
 import csv
@@ -31,7 +31,7 @@ class Topics2csv(Node):
         super().__init__('topics_2_csv')
         self.path_increment_sub_ = self.create_subscription(
           Float32,
-          "/social_nav_exp/path_increment",
+          "/measuring_tools/path_increment",
           self.path_increment_cb, 1)
         self.task_finished_sub_ = self.create_subscription(
           Empty,
@@ -40,13 +40,23 @@ class Topics2csv(Node):
         
         self.cost_sub_ = self.create_subscription(
           Int16,
-          "/social_nav_exp/robot_cost",
+          "/measuring_tools/robot_cost",
           self.cost_cb, 1)
 
         self.agent_distance_sub_ = self.create_subscription(
           Float32,
-          "/social_nav_exp/distance_to_agent",
+          "/measuring_tools/distance_to_agent",
           self.agent_distance_cb, 1)
+
+        #self.timeA_ = self.create_subscription(
+        #  Float64,
+        #  "time_A",
+        #  self.time_A_cb, 1)
+
+        #self.timeB_ = self.create_subscription(
+        #  Float64,
+        #  "time_B",
+        #  self.time_B_cb, 1)
 
         self.distance_ = 0.0
         self.min_agent_distance_ = 0.0
@@ -56,11 +66,17 @@ class Topics2csv(Node):
         self.intimate_z_ = 0.0
         self.time_ = 0.0
 
+        self.time_A_ = 0.0
+        self.time_B_ = 0.0
+
+        self.total_cost_ = 0.0
         #self.get_logger().info("DF_CLIENT: Ready!")
-        self.fieldnames_ = ['time', 'distance', 'dmin', 'psi_personal', 'psi_intimate']
+        #self.fieldnames_ = ['time', 'distance', 'dmin', 'psi_personal', 'psi_intimate']
+        #self.fieldnames_ = ['time1', 'time2']
+        self.fieldnames_ = ['time', 'total_cost']
 
         username = os.environ['USER']
-        self.path = "/home/" + username + "/waf2020_data/run/"
+        self.path = "/home/" + username + "/waf2020_extend_data/pddl_vs_bt/"
         filename_list = []
         for file in os.listdir(self.path):
           filename_list.append(int(file[:-4]))
@@ -85,38 +101,68 @@ class Topics2csv(Node):
         self.distance_ += msg.data
     
     def agent_distance_cb(self, msg):
-        if self.min_agent_distance_ == 0.0 or msg.data < self.min_agent_distance_:
+        #if self.min_agent_distance_ == 0.0 or msg.data < self.min_agent_distance_:
+        #    self.min_agent_distance_ = msg.data
+        if self.min_agent_distance_ == 0.0:
             self.min_agent_distance_ = msg.data
+        else:
+            self.min_agent_distance_ = (self.min_agent_distance_ + msg.data) / 2
 
     def task_finished_cb(self, msg):
         self.step()
 
+    #Default
+    #def cost_cb(self, msg):
+    #    self.cost_samples_ += 1.0
+    #    if msg.data > 0.0 and msg.data < 250.0:
+    #        self.personal_z_ += 1.0
+    #    elif msg.data >= 250.0:
+    #        self.intimate_z_ += 1.0
+
     def cost_cb(self, msg):
+        self.total_cost_ += msg.data
         self.cost_samples_ += 1.0
-        if msg.data > 0.0 and msg.data < 253.0:
-            self.personal_z_ += 1.0
-        elif msg.data >= 253.0:
-            self.intimate_z_ += 1.0
+        self.step()
+
+    #def time_A_cb(self, msg):
+    #    self.time_A_ = msg.data
+    #    self.step()
+    #
+    #def time_B_cb(self, msg):
+    #    self.time_B_ = msg.data
+    #    self.step()
+    
 
     def step(self):
         with open(self.path + self.csv_filename, mode='a+') as csv_file:
-          personal_percent = self.personal_z_ / self.cost_samples_
-          intimate_percent = self.intimate_z_ / self.cost_samples_
+          #personal_percent = self.personal_z_ / self.cost_samples_
+          #intimate_percent = self.intimate_z_ / self.cost_samples_
           writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames_)
+          #if self.time_A_ != 0.0 and self.time_B_ != 0.0:
+          #  writer.writerow({
+          #    'time1': self.time_A_,
+          #    'time2': self.time_B_})
+          #  self.time_A_ = 0.0
+          #  self.time_B_ = 0.0
+
+          #writer.writerow({
+          #    'time': self.get_clock().now().to_msg().sec - self.time_,
+          #    'distance': self.distance_,
+          #    'dmin': self.min_agent_distance_,
+          #    'psi_personal': personal_percent,
+          #    'psi_intimate': intimate_percent})
           writer.writerow({
-              'time': self.get_clock().now().to_msg().sec - self.time_,
-              'distance': self.distance_,
-              'dmin': self.min_agent_distance_,
-              'psi_personal': personal_percent,
-              'psi_intimate': intimate_percent})
+              'time': self.cost_samples_,
+              'total_cost': self.total_cost_})
+
           self.write_ = ''
           self.distance_ = 0.0
-          self.cost_samples_ = 0.0
+          #self.cost_samples_ = 0.0
           self.personal_z_ = 0.0
           self.intimate_z_ = 0.0
           self.min_agent_distance_ = 0.0
           self.time_ = self.get_clock().now().to_msg().sec
-
+          
 
 def main(args=None):
     rclpy.init(args=args)
