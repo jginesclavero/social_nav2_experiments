@@ -3,7 +3,7 @@
 from setuptools import find_packages
 from setuptools import setup
 
-package_name = 'social_navigation_csv'
+package_name = 'social_nav2_csv'
 
 setup(
     name=package_name,
@@ -28,14 +28,14 @@ setup(
         'Topic :: Software Development',
     ],
     description=(
-        'The social_navigation_csv package'
+        'The social_nav2_csv package'
     ),
     license='Apache License, Version 2.0',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'topics_2_csv = social_navigation_csv.topics_2_csv:main',
-            'exp2_topics_2_csv = social_navigation_csv.exp2_topics_2_csv:main'
+            'topics_2_csv = social_nav2_csv.topics_2_csv:main',
+            'exp2_topics_2_csv = social_nav2_csv.exp2_topics_2_csv:main'
         ],
     },
 )

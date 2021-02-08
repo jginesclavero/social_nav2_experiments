@@ -28,8 +28,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
-    social_bringup_dir = get_package_share_directory('social_navigation_bringup')
+    exp_bringup_dir = get_package_share_directory('social_nav2_exp_bringup')
+    social_bringup_dir = get_package_share_directory('social_nav2_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Declare the launch options

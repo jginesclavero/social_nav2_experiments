@@ -31,7 +31,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    social_bringup_dir = get_package_share_directory('social_navigation_bringup')
+    social_bringup_dir = get_package_share_directory('social_nav2_bringup')
     nav_bringup_dir = get_package_share_directory('nav2_bringup')
     launch_dir = os.path.join(nav_bringup_dir, 'launch')
 
@@ -96,7 +96,7 @@ def generate_launch_description():
     declare_bt_xml_cmd = DeclareLaunchArgument(
         'bt_xml_file',
         default_value=os.path.join(
-            get_package_share_directory('social_navigation_bringup'),
+            get_package_share_directory('social_nav2_bringup'),
             'behavior_trees', 'follow_point.xml'),
         description='Full path to the behavior tree xml file to use')
 
@@ -178,16 +178,6 @@ def generate_launch_description():
         event_handler=OnProcessExit(
             target_action=start_rviz_cmd,
             on_exit=EmitEvent(event=Shutdown(reason='rviz exited'))))
-    
-    bringup_cmd = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(launch_dir, 'bringup_launch.py')),
-        launch_arguments={'namespace': namespace,
-                          'use_namespace': use_namespace,
-                          'map': map_yaml_file,
-                          'use_sim_time': use_sim_time,
-                          'params_file': params_file,
-                          'bt_xml_file': bt_xml_file,
-                          'autostart': autostart,}.items())
 
     agent_spawner_cmd = Node(
         package='pedsim_gazebo_plugin',
@@ -225,6 +215,5 @@ def generate_launch_description():
 
     # Add the actions to launch all of the navigation nodes
     ld.add_action(start_robot_state_publisher_cmd)
-    #ld.add_action(bringup_cmd)
 
     return ld

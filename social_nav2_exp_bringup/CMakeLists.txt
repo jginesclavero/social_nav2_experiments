@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(social_navigation_exp_bringup)
+project(social_nav2_exp_bringup)
 
 find_package(ament_cmake REQUIRED)
 find_package(nav2_common REQUIRED)

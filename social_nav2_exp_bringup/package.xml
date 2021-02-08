@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>social_navigation_exp_bringup</name>
+  <name>social_nav2_exp_bringup</name>
   <version>0.3.0</version>
-  <description>Bringup scripts for the social_navigation2 experiments</description>
+  <description>Bringup scripts for the social_nav2 experiments</description>
   <maintainer email="jonatan.gines@urjc.es">jginesclavero</maintainer>
   <license>Apache-2.0</license>
 

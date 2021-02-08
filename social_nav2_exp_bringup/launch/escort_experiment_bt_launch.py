@@ -27,15 +27,15 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # ros2 run --prefix 'gdb -ex run --args' nav2_planner planner_server --ros-args -r __node:=planner_server --params-file /home/ubuntu/social_nav2_ws/src/social_navigation2/social_navigation_bringup/params/nav2_params.yaml
+    # ros2 run --prefix 'gdb -ex run --args' nav2_planner planner_server --ros-args -r __node:=planner_server --params-file /home/ubuntu/social_nav2_ws/src/social_nav2/social_nav2_bringup/params/nav2_params.yaml
 
     # Get the launch directory
-    exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
+    exp_bringup_dir = get_package_share_directory('social_nav2_exp_bringup')
 
     scene_file = LaunchConfiguration('scene_file')
     simulation_factor = LaunchConfiguration('simulation_factor')
 
-    social_bringup_dir = get_package_share_directory('social_navigation_bringup')
+    social_bringup_dir = get_package_share_directory('social_nav2_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Create the launch configuration variables
@@ -96,7 +96,7 @@ def generate_launch_description():
         output='screen')
     
     topics_2_csv_cmd = Node(
-        package='social_navigation_csv',
+        package='social_nav2_csv',
         executable='exp2_topics_2_csv',
         name='exp2_topics_2_csv',
         output='screen')

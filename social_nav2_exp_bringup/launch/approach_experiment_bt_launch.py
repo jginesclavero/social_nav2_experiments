@@ -28,8 +28,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
-    social_bringup_dir = get_package_share_directory('social_navigation_bringup')
+    exp_bringup_dir = get_package_share_directory('social_nav2_exp_bringup')
+    social_bringup_dir = get_package_share_directory('social_nav2_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Declare the launch options
@@ -71,17 +71,11 @@ def generate_launch_description():
         output='screen')
     
     topics_2_csv_cmd = Node(
-        package='social_navigation_csv',
+        package='social_nav2_csv',
         executable='topics_2_csv',
         name='topics_2_csv',
         output='screen')
     
-    agent_spawner_cmd = Node(
-        package='pedsim_gazebo_plugin',
-        executable='spawn_single_agent.py',
-        name='spawn_single_agent',
-        output='screen')
-
     social_nav_bringup_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(launch_dir, 'social_nav_launch.py')))
 
@@ -100,7 +94,6 @@ def generate_launch_description():
     ld.add_action(path_cmd)
     ld.add_action(topics_2_csv_cmd)
 
-    ld.add_action(agent_spawner_cmd)
     ld.add_action(social_goal_updater_cmd)
     ld.add_action(approach_sim)
     ld.add_action(social_nav_bringup_cmd)

@@ -28,8 +28,8 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    exp_bringup_dir = get_package_share_directory('social_navigation_exp_bringup')
-    social_bringup_dir = get_package_share_directory('social_navigation_bringup')
+    exp_bringup_dir = get_package_share_directory('social_nav2_exp_bringup')
+    social_bringup_dir = get_package_share_directory('social_nav2_bringup')
     launch_dir = os.path.join(social_bringup_dir, 'launch')
 
     # Declare the launch options
@@ -46,7 +46,7 @@ def generate_launch_description():
     declare_bt_xml_cmd = DeclareLaunchArgument(
         'default_bt_xml_filename',
         default_value=os.path.join(
-            get_package_share_directory('social_navigation_bringup'),
+            get_package_share_directory('social_nav2_bringup'),
             'behavior_trees', 'navigate_w_replanning_and_recovery.xml'),
         description='Full path to the behavior tree xml file to use')
 
@@ -55,13 +55,13 @@ def generate_launch_description():
 
     approach_controller_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('social_navigation_actions'),
+            get_package_share_directory('social_nav2_actions'),
             'launch',
             'approach_controller.py'))
     )
     social_nav_actions_cmd = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(
-            get_package_share_directory('social_navigation_actions'),
+            get_package_share_directory('social_nav2_actions'),
             'launch',
             'social_nav_actions.py'))
     )
@@ -85,7 +85,7 @@ def generate_launch_description():
         output='screen')
     
     topics_2_csv_cmd = Node(
-        package='social_navigation_csv',
+        package='social_nav2_csv',
         executable='topics_2_csv',
         name='topics_2_csv',
         output='screen')

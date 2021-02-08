@@ -41,7 +41,7 @@ NavigateToWp::on_tick()
   RCLCPP_INFO(node_->get_logger(), "Navigating to... [%s -- %f %f]",
    res.c_str(), wp_.position.x, wp_.position.y);
   goal_.pose.pose = wp_;
-  goal_.behavior_tree = "/home/jgines/social_nav2/src/social_navigation2/social_navigation_bringup/behavior_trees/navigate_w_replanning_and_recovery.xml";
+  goal_.behavior_tree = "/home/jgines/social_nav2/src/social_nav2/social_nav2_bringup/behavior_trees/navigate_w_replanning_and_recovery.xml";
 }
 
 BT::NodeStatus

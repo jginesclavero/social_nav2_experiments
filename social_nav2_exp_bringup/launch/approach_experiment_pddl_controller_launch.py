@@ -24,14 +24,14 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get the launch directory
-    example_dir = get_package_share_directory('social_navigation_actions')
+    example_dir = get_package_share_directory('social_nav2_actions')
 
     stdout_linebuf_envvar = SetEnvironmentVariable(
         'RCUTILS_CONSOLE_STDOUT_LINE_BUFFERED', '1')
 
     # Specify the actions
     controller_cmd = Node(
-        package='social_navigation_actions',
+        package='social_nav2_actions',
         node_executable='approach_controller_node',
         node_name='approach_controller_node',
         output='screen',

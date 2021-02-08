@@ -32,7 +32,7 @@ TurnAgent::TurnAgent(
 void TurnAgent::initialize() 
 {
   pub_ = node_->create_publisher<std_msgs::msg::Empty>(
-    "social_navigation/update_approach_tf",
+    "social_nav2/update_approach_tf",
     rclcpp::SystemDefaultsQoS());
   initialized_ = true;
 }

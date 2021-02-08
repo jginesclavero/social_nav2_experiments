@@ -29,7 +29,7 @@ namespace dummy_tf2
 DummyTF2::DummyTF2(const std::string & name) : Node(name)
 {
   sub_ = create_subscription<std_msgs::msg::Empty>(
-      "social_navigation/update_approach_tf", rclcpp::SystemDefaultsQoS(),
+      "social_nav2/update_approach_tf", rclcpp::SystemDefaultsQoS(),
       std::bind(&DummyTF2::approachTFCallback, this, std::placeholders::_1));
   tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
   update_agent_pub_ = create_publisher<pedsim_msgs::msg::AgentStates>(
